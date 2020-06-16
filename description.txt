@@ -1,0 +1,19 @@
+- NAS -
+## setup mysql
+1. pkg install mysql57-client mysql57-server	
+2. sysrc mysql_enable="yes"			# enable mysql-server for service-handler (rc)
+3. service mysql-server start			# start service
+4. service mysql-server status			# check if everything OK
+5. cd /usr/local/bin				
+6. mysql_secure_installation			# start secure installation
+# Note: There should be a generated password in $HOME/.mysql_secret
+
+
+- Raspberry Pi -
+## Grafana setup
+1. sudo apt update && sudo apt upgrade -y	# update system
+2. sudo apt install libfontconfig1 -y		# install req-library for grafana
+3. wget https://dl.grafana.com/oss/release/grafana-rpi_7.0.3_armhf.deb 	# download ARMv6 version
+4. sudo dpkg -i grafana-rpi_7.0.3_armhf.deb	# install with package-manager
+
+##
