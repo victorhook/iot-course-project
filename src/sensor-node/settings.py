@@ -3,5 +3,5 @@ config = {
     'passwd': 'WIFI_PASS',
     'client_id': '',
     'server': 'SERVER_IP',
-    'sleep_time': 600000000
+    'sleep_time': 600000    # miliseconds
 }
