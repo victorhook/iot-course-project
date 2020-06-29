@@ -1,0 +1,9 @@
+ 
+[Unit]
+Description=Subscribes to desired topics and saves them do a MySql database
+
+[Service]
+ExecStart=/usr/sbin/mqtt_mysql.sh
+
+[Install]
+WantedBy=multi-user.target
