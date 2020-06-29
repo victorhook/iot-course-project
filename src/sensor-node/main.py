@@ -1,4 +1,6 @@
-VCC_PIN       = const(15)        # D8
+
+# pin configs
+V_OUT_PIN     = const(15)        # D8
 MUX_PIN1      = const(14)        # D5
 MUX_PIN2      = const(13)        # D7
 DHT_PIN       = const(12)        # D6
@@ -16,7 +18,7 @@ from machine import ADC, I2C, Pin, RTC
 import time
 
 # initialize the pins (this will power up the sensors)
-vcc, mux1, mux2 = init_pins(Pin, VCC_PIN, MUX_PIN1, MUX_PIN2)
+mux1, mux2 = init_pins(Pin, V_OUT_PIN, MUX_PIN1, MUX_PIN2)
 
 # the temperature sensors 
 from dht import DHT11
@@ -36,39 +38,38 @@ if run:
     time.sleep(1.5)
 
     attempts = 0
+    result = None
     # sometimes reading the sensors throws an error (probably because
     # they're not ready yet.) This is usually fine because the wifi
     # establishment usually takes a while anyways
-    while attempts < MAX_ATTEMPTS:
+    while attempts < MAX_ATTEMPTS and result is None:
         try:
             # read the sensors 
             result = read_sensors(mux1, mux2, mcp, dht, fc28)
         except:
             attempts += 1
 
-        if attempts != MAX_ATTEMPTS:
+    if attempts != MAX_ATTEMPTS:
 
-            t1 = time.time()
-            # if we're not connected to the wifi yet, we wait max 10 seconds
-            while not wlan.isconnected() and time.ticks_diff(time.time(), t1) < MAX_WIFI_WAIT:
-                pass
+        t1 = time.time()
+        # if we're not connected to the wifi yet, we wait max X seconds
+        while not wlan.isconnected() and time.ticks_diff(time.time(), t1) < MAX_WIFI_WAIT:
+            pass
 
-            if wlan.isconnected():
-                # publish the result to the MQTT-broker
-                try:
-                    publish(MY_ID, SERVER, result)
-                except:
-                    # if we fail, there's probably something wrong with
-                    # the broker, we'll go straight back to sleep, no 
-                    # reason to try again
-                    pass
-
+        if wlan.isconnected():
+            # publish the result to the MQTT-broker
+            try:
+                publish(MY_ID, SERVER, result)
                 # need to wait a little bit before sleeping, otherwise
                 # the data is sometimes not sent (not sure why)
                 time.sleep(.2)
+            except:
+                # if we fail, there's probably something wrong with
+                # the broker, we'll go straight back to sleep, no 
+                # reason to try again
+                pass
 
-
-        go_sleep(SLEEP_TIME)
+    go_sleep(SLEEP_TIME)
 
 
 # if this is reached, we are NOT in sensor mode, but probably in repl

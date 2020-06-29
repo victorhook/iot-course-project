@@ -22,3 +22,5 @@ SLEEP_TIME = config['sleep_time']
 import gc
 # do a garbage collection before we start sensors
 gc.collect()
+
+# now the main program takes over
