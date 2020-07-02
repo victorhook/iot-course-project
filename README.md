@@ -5,4 +5,4 @@ In this proejct I've made a wall-mounted dashboard to monitor the weather and th
 2. **Dashboard Monitor** consists of an old PC-screen with the aid of a Raspberry Pi W Zero. The RPI uses Grafana together with openbox and chromium to display the graph on the monitor. 
 3. The **Backend** consists of mysql, Node-red and mosquitto. These programs allow a really nice way of working with the dataflow.
 
-![monitor.jpg]()
+![monitor.jpg](https://github.com/victorhook/iot-course-project/blob/master/monitor.jpg)
