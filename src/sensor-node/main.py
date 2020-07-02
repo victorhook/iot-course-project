@@ -37,6 +37,8 @@ if run:
     # need to wait for the DHT11 to initialize
     time.sleep(1.5)
 
+    print('step 1')
+
     attempts = 0
     result = None
     # sometimes reading the sensors throws an error (probably because
@@ -45,30 +47,35 @@ if run:
     while attempts < MAX_ATTEMPTS and result is None:
         try:
             # read the sensors 
+            print('step 2')
             result = read_sensors(mux1, mux2, mcp, dht, fc28)
         except:
             attempts += 1
 
     if attempts != MAX_ATTEMPTS:
-
+        print('step 3')
         t1 = time.time()
         # if we're not connected to the wifi yet, we wait max X seconds
         while not wlan.isconnected() and time.ticks_diff(time.time(), t1) < MAX_WIFI_WAIT:
             pass
 
         if wlan.isconnected():
+            print('step 4')
             # publish the result to the MQTT-broker
             try:
+                print(MY_ID, SERVER, result)
                 publish(MY_ID, SERVER, result)
                 # need to wait a little bit before sleeping, otherwise
                 # the data is sometimes not sent (not sure why)
-                time.sleep(.2)
-            except:
+                time.sleep(.3)
+                print('step 5')
+            except Exception as e:
                 # if we fail, there's probably something wrong with
                 # the broker, we'll go straight back to sleep, no 
                 # reason to try again
-                pass
+                print(str(e))
 
+    print('step 6')
     go_sleep(SLEEP_TIME)
 
 

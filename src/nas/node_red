@@ -1,0 +1,72 @@
+#attach_time
+
+function add_zero(number) {
+    if (number < 10) {
+        return "0" + number.toString();
+    }
+    return number;
+}
+
+date = new Date();
+time = date.getFullYear() + '-' + 
+       add_zero(date.getMonth() + 1) + '-' + 
+       add_zero(date.getDate()) + ' ' + 
+       add_zero(date.getHours()) + ':' + 
+       add_zero(date.getMinutes()) + ':' + 
+       add_zero(date.getSeconds());
+       
+
+msg.time = time;
+return msg;
+
+# query
+var table = msg.topic.split('/')[1];
+var query = "INSERT INTO " + table + "( time, ";
+
+for (var column in msg.payload) {
+    query += column + ", ";
+}
+query = query.substring(0, query.length - 2);
+query += ") VALUES ('" + msg.time + "', ";
+
+for (var column in msg.payload) {
+    query += msg.payload[column] + ", ";
+}
+query = query.substring(0, query.length - 2);
+query += ")";
+
+msg.topic = query;
+return msg;
+
+
+# set_some_vars
+msg.json = msg.payload;
+msg.mqtt_topic = msg.topic.split('/')[1];
+msg.payload = msg.topic;
+return msg;
+
+# record_query
+msg.topic = "SELECT * FROM weather ORDER BY temperature DESC";
+return msg;
+
+#new_record?
+var previousRecord = parseInt(msg.payload[0].temperature);
+var newTemp = parseInt(msg.json.temperature);;
+
+if ( newTemp > previousRecord ) {
+    msg.payload = true;
+    msg.temperature = newTemp;
+} else {
+    msg.payload = false;
+}
+
+return msg;
+
+#create_email
+msg.topic = "Hot weather!";
+msg.payload = "Looks like it's very hot weather today!" +
+"\nThere's been a new heat record at the balcony!" +
+"\nIt's currently " + msg.temperature + " degrees," +
+"don't forget your sunscreen!"
+
+return msg;

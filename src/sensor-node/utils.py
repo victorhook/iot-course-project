@@ -45,6 +45,7 @@ def read_sensors(mux1, mux2, mcp, dht, fc28):
 def publish(client_id, server, result):
 
     from umqtt.simple import MQTTClient
+    import time
 
     # unpack the result 
     basil, thyme, oregano, humidity, temp = result
@@ -60,7 +61,7 @@ def publish(client_id, server, result):
     client.publish('sensors/weather', 
                     '{"temperature":"%s", "humidity":"%s"}' \
                     % (temp, humidity) )
-
+    
 
 def go_sleep(sleep_ms):
     import machine  
