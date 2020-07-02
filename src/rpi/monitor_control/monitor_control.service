@@ -1,0 +1,9 @@
+[Unit]
+Description=Controls the LED of the monitor the Ultrasonic sensor, to turn on/off the display with your hand
+
+[Service]
+ExecStart=/usr/sbin/monitor_control
+User=pi
+
+[Install]
+WantedBy=multi-user.target
